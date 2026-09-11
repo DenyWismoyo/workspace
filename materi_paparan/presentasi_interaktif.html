@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap Solo Technopark 2026–2030 | Executive Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070d18;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --border-card: rgba(56, 189, 248, 0.25);
+      --primary: #0284c7;
+      --accent-cyan: #38bdf8;
+      --accent-amber: #f59e0b;
+      --accent-green: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Ambient Background Particle Canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    /* Live Drawing Annotation Canvas */
+    #draw-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 56px);
+      z-index: 80;
+      pointer-events: none;
+    }
+    #draw-canvas.drawing-active {
+      pointer-events: auto;
+      cursor: crosshair;
+    }
+
+    /* Virtual Laser Pointer */
+    #laser-pointer {
+      position: fixed;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 10px 4px rgba(239, 68, 68, 0.9), 0 0 20px 8px rgba(239, 68, 68, 0.4);
+      pointer-events: none;
+      z-index: 999999;
+      display: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.04s ease-out;
+    }
+
+    /* Blur Screen Mode (Focus on Speaker) */
+    #blur-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 56px);
+      background: rgba(7, 13, 24, 0.88);
+      backdrop-filter: blur(24px);
+      z-index: 85;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #bae6fd;
+      padding: 40px;
+    }
+    #blur-screen.active {
+      display: flex;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 90;
+      pointer-events: none;
+    }
+
+    /* Timer Floating Pill */
+    #timer-pill {
+      position: fixed;
+      top: 14px;
+      right: 20px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      z-index: 95;
+      display: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    #timer-pill.warning {
+      color: #ef4444;
+      border-color: #ef4444;
+      animation: pulse-red 1s infinite;
+    }
+    @keyframes pulse-red {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Top Progress Bar */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #38bdf8, #10b981, #f59e0b);
+      width: 10%;
+      z-index: 100;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Presentation Canvas */
+    .deck-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.98);
+      display: flex;
+      flex-direction: column;
+      padding: 40px 60px 80px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+      z-index: 10;
+    }
+
+    /* Slide Header */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 12px;
+    }
+
+    .header-category {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+    }
+
+    .header-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .slide-badge {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--border-card);
+      color: var(--accent-cyan);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    /* Content Area */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Grids & Cards */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-list { list-style: none; }
+    .card-list li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 9px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .card-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Table styling */
+    .slide-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-card);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 13px;
+    }
+    .slide-table th {
+      background: rgba(2, 132, 199, 0.28);
+      color: #ffffff;
+      text-align: left;
+      padding: 12px 14px;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .slide-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+    .slide-table tr:hover td {
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+    }
+
+    .quote-banner {
+      margin-top: 18px;
+      background: rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 13px;
+      color: #bae6fd;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* Hero Cover */
+    .hero-slide {
+      background-image: linear-gradient(rgba(7, 13, 24, 0.85), rgba(7, 13, 24, 0.88)), url('assets/slide_01_cover.jpg');
+      background-size: cover;
+      background-position: center;
+      justify-content: center;
+      padding: 60px 80px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      letter-spacing: 0.1em;
+    }
+
+    .hero-title {
+      font-size: 44px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #ffffff;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title span {
+      background: linear-gradient(90deg, #38bdf8, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: #94a3b8;
+      max-width: 800px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    /* Bottom Control Bar */
+    .control-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 56px;
+      background: rgba(7, 13, 24, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 99;
+      backdrop-filter: blur(14px);
+    }
+
+    .controls-left, .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .btn-nav.active-btn {
+      background: var(--accent-amber);
+      color: #000;
+      font-weight: bold;
+      border-color: var(--accent-amber);
+    }
+
+    .page-indicator {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-family: 'Space Grotesk', sans-serif;
+      margin: 0 6px;
+    }
+
+    /* Speaker Notes Drawer */
+    #notes-drawer {
+      position: fixed;
+      bottom: 56px;
+      left: 0;
+      width: 100%;
+      max-height: 240px;
+      background: rgba(15, 23, 42, 0.98);
+      border-top: 2px solid var(--accent-cyan);
+      padding: 20px 30px;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      z-index: 98;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    #notes-drawer.open {
+      transform: translateY(0);
+    }
+
+    .notes-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-amber);
+      margin-bottom: 8px;
+    }
+
+    .notes-content {
+      font-size: 14.5px;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    /* Slide Overview Modal (Shortcut O) */
+    #overview-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 13, 24, 0.96);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 40px;
+      backdrop-filter: blur(20px);
+    }
+
+    #overview-modal.open {
+      display: flex;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .overview-card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .overview-card:hover {
+      border-color: var(--accent-cyan);
+      transform: scale(1.03);
+    }
+
+    .overview-card.current {
+      border-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Interactive Tech Particle Network -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div id="progress-bar"></div>
+
+  <div class="deck-container">
+
+    <!-- SLIDE 01: COVER -->
+    <section class="slide hero-slide active" data-slide="1">
+      <div>
+        <div class="hero-tag">PEMERINTAH KOTA SURAKARTA & BRIDA</div>
+        <h1 class="hero-title">
+          STRATEGI INOVATIF PENGEMBANGAN<br>
+          <span>SOLO TECHNOPARK 2026–2030</span>
+        </h1>
+        <p class="hero-desc">
+          Transformasi kawasan dari sekadar pengelolaan fisik menjadi mesin hilirisasi riset, akselerator startup, dan lokomotif kemandirian ekonomi Kota Surakarta.
+        </p>
+
+        <div class="grid-4" style="max-width: 1100px;">
+          <div class="card" style="border-left: 3px solid var(--accent-cyan);">
+            <div class="card-title">🏛️ Kelembagaan BLUD</div>
+            <p style="font-size: 12px; color: var(--text-muted);">Delivery unit mandiri & lincah di bawah BRIDA Surakarta.</p>
+          </div>
+          <div class="card" style="border-left: 3px solid #38bdf8;">
+            <div class="card-title">🔬 Hilirisasi Riset</div>
+            <p style="font-size: 12px; color: var(--text-muted);">Jembatan invensi kampus menuju etalase pasar komersial.</p>
+          </div>
+          <div class="card" style="border-left: 3px solid var(--accent-amber);">
+            <div class="card-title">📈 Target Rp 23,4 M</div>
+            <p style="font-size: 12px; color: var(--text-muted);">Lompatan pendapatan 300% pada tahun 2030 tanpa beban APBD.</p>
+          </div>
+          <div class="card" style="border-left: 3px solid var(--accent-green);">
+            <div class="card-title">🤝 95+ Mitra Global</div>
+            <p style="font-size: 12px; color: var(--text-muted);">Ekosistem AI, Cyber Security, Gaming & Telko 5G terpasang.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Bapak Walikota yang kami hormati, perkenankan kami menyampaikan arah baru dan Roadmap Solo Technopark periode 2026 hingga 2030. Solo Technopark hari ini tidak lagi boleh dipandang hanya sebagai fasilitas gedung semata, melainkan motor penggerak inovasi daerah dan lokomotif ekonomi baru yang menghubungkan riset kampus dengan kebutuhan industri.
+      </div>
+    </section>
+
+    <!-- SLIDE 02: KELEMBAGAAN BRIDA - STP -->
+    <section class="slide" data-slide="2">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Tata Kelola Pemerintahan & Regulasi</div>
+          <h2 class="header-title">Kedudukan Kelembagaan & Sinergi Harmonis BRIDA–STP</h2>
+        </div>
+        <div class="slide-badge">Pola Kelola BLUD</div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card" style="border-top: 4px solid var(--primary);">
+            <div class="card-title">🏛️ BRIDA SURAKARTA</div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 10px;">ORCHESTRATOR & REGULATOR</div>
+            <ul class="card-list">
+              <li>Perumusan arah kebijakan riset & inovasi daerah</li>
+              <li>Penyusunan kajian strategis dan peta jalan ekonomi kota</li>
+              <li>Koordinasi lintas OPD, akademisi, dan lembaga riset</li>
+              <li>Monitoring, evaluasi capaian, dan akuntabilitas publik</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-cyan);">
+            <div class="card-title">⚙️ UPTD KST SOLO TECHNOPARK</div>
+            <div style="font-size: 11px; font-weight: 700; color: #38bdf8; margin-bottom: 10px;">DELIVERY UNIT OPERASIONAL (BLUD)</div>
+            <ul class="card-list">
+              <li>Eksekusi teknis operasional hilirisasi riset ke pasar</li>
+              <li>Inkubasi bisnis, pembinaan startup & pendampingan HKI</li>
+              <li>Penyelenggaraan diklat vokasi industri spesifik & sertifikasi</li>
+              <li>Penerapan fleksibilitas keuangan & praktik bisnis sehat</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-green);">
+            <div class="card-title">👥 MASYARAKAT & DUNIA USAHA</div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--accent-green); margin-bottom: 10px;">PENERIMA MANFAAT & INVESTOR</div>
+            <ul class="card-list">
+              <li>Penyerapan tenaga kerja pemuda terampil Kota Solo</li>
+              <li>Peningkatan skala usaha, omzet, dan daya saing UMKM</li>
+              <li>Investasi industri & pemanfaatan fasilitas lab teknologi</li>
+              <li>Kontribusi Pendapatan Asli Daerah (PAD) & pajak retribusi</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="quote-banner">
+          ⚖️ Landasan Hukum Kuat: Perwali No. 15/2022 & No. 38/2022 (Pola Tata Kelola BLUD STP) • Perpres No. 106/2017 (Kawasan Sains & Teknologi) • Permendagri No. 79/2018 (Fleksibilitas BLUD)
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Dasar hukum kita sangat solid, Bapak Walikota. Berdasarkan Perwali 15 dan 38 Tahun 2022, BRIDA bertindak sebagai otak yang merumuskan kebijakan, sementara UPTD STP adalah delivery unit eksekutornya di lapangan. Status BLUD memberi kita kelincahan bisnis untuk melayani industri secara profesional tanpa birokrasi berbelit.
+      </div>
+    </section>
+
+    <!-- SLIDE 03: 4 PILAR LAYANAN -->
+    <section class="slide" data-slide="3">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Standar Nasional Perpres 106/2017</div>
+          <h2 class="header-title">4 Pilar Portofolio Layanan BLUD Solo Technopark</h2>
+        </div>
+        <div class="slide-badge">Kawasan Sains & Teknologi</div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card" style="border-left: 4px solid #2563eb;">
+            <div class="card-title" style="color: #60a5fa;">1. LAYANAN TEKNIS (Vocational Training)</div>
+            <ul class="card-list">
+              <li>Diklat Manufaktur Presisi & Pemesinan CNC Modern</li>
+              <li><strong>Underwater Wet Welding</strong> (Pengelasan Bawah Air Spesialis)</li>
+              <li>Otomasi Industri, PLC & Mekatronika Terapan</li>
+              <li>Pelatihan Manajerial, Safety K3 & Desain Manufaktur</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-left: 4px solid #0d9488;">
+            <div class="card-title" style="color: #2dd4bf;">2. PENGEMBANGAN TEKNOLOGI (Engineering & Prototyping)</div>
+            <ul class="card-list">
+              <li>Jasa Layanan Industri & Pembuatan Precision Parts</li>
+              <li>Pembuatan Prototipe Produk untuk UKM/IKM Unggulan</li>
+              <li>Uji Standarisasi Mutu & Sertifikasi Alat Teknologi</li>
+              <li>Kerjasama Riset Terapan & Rekayasa Bersama Industri</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-left: 4px solid #d97706;">
+            <div class="card-title" style="color: #fbbf24;">3. INKUBASI BISNIS & TEKNOLOGI</div>
+            <ul class="card-list">
+              <li>Pra-Inkubasi, Seleksi Inovator & Kurasi Produk</li>
+              <li>Pendampingan Legalitas Usaha, Merk & HKI Paten</li>
+              <li>Fasilitasi Pendanaan Investasi & Business Matching</li>
+              <li>Penyediaan Fasilitas Co-Working Space & Lab Kreatif</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-left: 4px solid #7c3aed;">
+            <div class="card-title" style="color: #a78bfa;">4. LAYANAN PENDUKUNG (Ecosystem Enabler)</div>
+            <ul class="card-list">
+              <li>Prakerin & Uji Kompetensi Kejuruan Siswa SMK Solo Raya</li>
+              <li>Pusat Peragaan IPTEK Edukatif (Solo Science Center)</li>
+              <li>Optimalisasi Sarana Kawasan, Gedung Pameran & Convention</li>
+              <li>Penyelenggaraan Event Ekosistem Digital & Expo Inovasi</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="quote-banner">
+          💡 "BLUD menggeser paradigma dari sekadar mengelola kawasan fisik menjadi penyedia solusi teknologi yang responsif pasar."
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Sebagai BLUD, STP beroperasi di atas 4 pilar utama layanan sesuai standar nasional KST. Kami tidak hanya melatih operator dasar, tetapi memiliki kompetensi unggulan langka seperti pengelasan bawah air (underwater welding) dan manufaktur presisi yang diminati industri nasional.
+      </div>
+    </section>
+
+    <!-- SLIDE 04: PIPELINE HILIRISASI -->
+    <section class="slide" data-slide="4">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Rantai Nilai Ekonomi Inovasi</div>
+          <h2 class="header-title">Pipeline Hilirisasi Riset: Dari Kampus Menuju Pasar Komersial</h2>
+        </div>
+        <div class="slide-badge">Hilirisasi Terpadu</div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-5" style="margin-bottom: 20px;">
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 20px; font-weight: 800; color: var(--accent-cyan);">01</div>
+            <div style="font-size: 13px; font-weight: 700; margin: 4px 0;">Riset & Invensi</div>
+            <div style="font-size: 11px; color: var(--text-muted);">UNS, UMS & Inovator</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 20px; font-weight: 800; color: var(--accent-cyan);">02</div>
+            <div style="font-size: 13px; font-weight: 700; margin: 4px 0;">Kurasi & Seleksi</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Uji Kebutuhan Pasar</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 20px; font-weight: 800; color: var(--accent-cyan);">03</div>
+            <div style="font-size: 13px; font-weight: 700; margin: 4px 0;">Prototipe & Uji</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Workshop Manufaktur</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 20px; font-weight: 800; color: var(--accent-cyan);">04</div>
+            <div style="font-size: 13px; font-weight: 700; margin: 4px 0;">Inkubasi Bisnis</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Paten & Business Plan</div>
+          </div>
+          <div class="card" style="text-align: center; border-color: var(--accent-green); background: rgba(16, 185, 129, 0.15);">
+            <div style="font-size: 20px; font-weight: 800; color: var(--accent-green);">05</div>
+            <div style="font-size: 13px; font-weight: 700; margin: 4px 0; color: #ffffff;">Pasar & Penjualan</div>
+            <div style="font-size: 11px; color: #a7f3d0;">e-Katalog LKPP & Industri</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">🚀 Contoh Inovasi Teknologi Terapan</div>
+            <ul class="card-list">
+              <li>Mesin Sortasi Kopi Otomatis berbasis Vision Sensor & AI</li>
+              <li>Pertanian Cerdas (Smart Agriculture IoT) untuk Petani Binaan</li>
+              <li>Mesin Penetas Telur Presisi & Hemat Energi untuk Peternak</li>
+              <li>Simulator Virtual Reality (VR) Pelatihan Ketenagakerjaan</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-title">🎯 Output Riil yang Dihasilkan</div>
+            <ul class="card-list">
+              <li>Paten dan Hak Kekayaan Intelektual (HKI) Tercatat Resmi</li>
+              <li>Prototipe TRL 7-9 Siap Masuk Jalur Produksi Massal</li>
+              <li>Kelahiran Perusahaan Rintisan Teknologi (Spin-off Company)</li>
+              <li>Produk Lokal Masuk Pengadaan Barang/Jasa e-Katalog LKPP</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="quote-banner">
+          ⭐ "Solo Technopark adalah jembatan yang menghubungkan meja laboratorium kampus dengan etalase pasar komersial."
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Kelemahan riset kampus selama ini adalah berhenti di skripsi atau jurnal. Di STP, kita siapkan pipeline terstruktur: kita kurasi invensinya, kita buat prototipenya di workshop kita, kita uji standarnya, dan kita dampingi hingga produk inovasi tersebut masuk e-Katalog untuk diserap pasar.
+      </div>
+    </section>
+
+    <!-- SLIDE 05: EKOSISTEM KEMITRAAN -->
+    <section class="slide" data-slide="5">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Kolaborasi Quadruplehelix (ABGC+M)</div>
+          <h2 class="header-title">Ekosistem Kemitraan Strategis: 95+ Korporasi Terkemuka</h2>
+        </div>
+        <div class="slide-badge">95+ Mitra Aktif</div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card" style="background-image: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.9)), url('assets/slide_04_05_innovation_lab.jpg'); background-size: cover; background-position: center; justify-content: center; text-align: center; padding: 40px 20px;">
+            <div style="font-size: 42px; font-weight: 800; color: var(--accent-cyan); font-family: 'Space Grotesk';">95+</div>
+            <div style="font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 8px;">MITRA KORPORASI GLOBAL & NASIONAL</div>
+            <p style="font-size: 13px; color: var(--text-muted); max-width: 400px; margin: 0 auto;">
+              Berhasil menarik investasi fasilitas dan sarana teknologi mutakhir ke Kota Solo tanpa membebani APBD.
+            </p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="card" style="padding: 14px;">
+              <div class="card-title" style="margin-bottom: 4px;">🛡️ National Cyber Security Hub</div>
+              <p style="font-size: 12px; color: var(--text-muted);">Pusat riset ketahanan siber nasional dan pelatihan hacker etis bersama industri.</p>
+            </div>
+            <div class="card" style="padding: 14px;">
+              <div class="card-title" style="margin-bottom: 4px;">🎮 Solo Gaming Hub</div>
+              <p style="font-size: 12px; color: var(--text-muted);">Inkubasi studio game independen dan pengembang konten multimedia kreatif.</p>
+            </div>
+            <div class="card" style="padding: 14px;">
+              <div class="card-title" style="margin-bottom: 4px;">🤖 AI Experience Center & 5G Innovation Lab</div>
+              <p style="font-size: 12px; color: var(--text-muted);">Fasilitas riset kecerdasan buatan terapan bersama Indosat Ooredoo Hutchison & Huawei.</p>
+            </div>
+            <div class="card" style="padding: 14px;">
+              <div class="card-title" style="margin-bottom: 4px;">🛒 GoTo UMKM Center & Mitra Strategis Lain</div>
+              <p style="font-size: 12px; color: var(--text-muted);">Didukung Shopee, Mandiri, Garena, J&T Express, Kemenperin, dan BP3MI.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote-banner">
+          🌟 "Kepercayaan korporasi dunia membuktikan bahwa Surakarta memiliki daya tarik ekosistem teknologi yang sangat tinggi."
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Bapak Walikota, STP telah dipercaya oleh 95 lebih mitra industri kelas dunia. Di sini sudah ada Cyber Security Hub, Gaming Hub, AI Experience Center, hingga GoTo UMKM Center. Fasilitas canggih ini dihadirkan oleh para mitra tanpa menyedot anggaran APBD Kota Surakarta.
+      </div>
+    </section>
+
+    <!-- SLIDE 06: GAP ANALYSIS -->
+    <section class="slide" data-slide="6">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Evaluasi Kritis & Otokritik Manajerial</div>
+          <h2 class="header-title">Gap Analysis: 5 Tantangan Kritis & Arah Solusi Pembenahan</h2>
+        </div>
+        <div class="slide-badge">Analisis Kesenjangan</div>
+      </div>
+      <div class="slide-body">
+        <table class="slide-table">
+          <thead>
+            <tr>
+              <th style="width: 5%;">No</th>
+              <th style="width: 25%;">Kesenjangan (GAP)</th>
+              <th style="width: 35%;">Identifikasi Sumber & Akar Masalah</th>
+              <th style="width: 35%;">Solusi & Rencana Aksi Pembenahan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1</strong></td>
+              <td style="color: #ffffff; font-weight: 600;">Varian Pelatihan Terbatas</td>
+              <td>Keterbatasan instruktur ahli bersertifikat dan alat mesin modern.</td>
+              <td style="color: #38bdf8;">Sharing equipment industri & penambahan kurikulum EV, AI, Mekatronika.</td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td style="color: #ffffff; font-weight: 600;">R&D Belum Mengarah Hilirisasi</td>
+              <td>Riset kampus masih sebatas publikasi jurnal ilmiah, belum membaca pasar.</td>
+              <td style="color: #38bdf8;">Membentuk Clearing House riset berbasis tantangan industri (demand-driven).</td>
+            </tr>
+            <tr>
+              <td><strong>3</strong></td>
+              <td style="color: #ffffff; font-weight: 600;">Optimalisasi Lahan Belum Maksimal</td>
+              <td>Lahan kosong belum dikemas dalam dokumen penawaran investasi spesifik.</td>
+              <td style="color: #38bdf8;">Penyusunan Masterplan Investasi & skema KSO/BOT untuk Tech-Office & Data Center.</td>
+            </tr>
+            <tr>
+              <td><strong>4</strong></td>
+              <td style="color: #ffffff; font-weight: 600;">Kemandirian Finansial Rendah</td>
+              <td>Hardware infrastruktur belum dikelola sebagai portofolio bisnis komersial.</td>
+              <td style="color: #38bdf8;">Standardisasi tarif layanan & pembentukan Strategic Business Unit (SBU).</td>
+            </tr>
+            <tr>
+              <td><strong>5</strong></td>
+              <td style="color: #ffffff; font-weight: 600;">Promosi & Jejaring Kurang</td>
+              <td>Jejaring mitra belum diikat dalam payung regulasi bisnis jangka panjang.</td>
+              <td style="color: #38bdf8;">Penguatan tim Corporate Partnership & regulasi kontrak bisnis terstandar.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="quote-banner">
+          ⚠️ "Kejujuran manajerial dalam mengidentifikasi gap adalah fondasi agar target 2026–2030 dapat dieksekusi secara realistis."
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Agar lompatan kita terukur, kami melakukan otokritik secara jujur. Ada 5 isu utama: pelatihan yang perlu diperluas, riset kampus yang harus kita arahkan ke komersialisasi, lahan tidur yang perlu ditawarkan ke investor, tata kelola finansial menuju mandiri, serta penguatan tim marketing kemitraan.
+      </div>
+    </section>
+
+    <!-- SLIDE 07: ROADMAP 2026-2030 -->
+    <section class="slide" data-slide="7">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Perencanaan Kerja Jangka Menengah</div>
+          <h2 class="header-title">Roadmap Pengembangan Solo Technopark 2026–2030</h2>
+        </div>
+        <div class="slide-badge">Milestone 3 Fase</div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card" style="border-top: 4px solid var(--accent-cyan);">
+            <div style="font-size: 12px; font-weight: 800; color: var(--accent-cyan); margin-bottom: 4px;">FASE I (2026–2027)</div>
+            <div class="card-title" style="font-size: 16px;">KONSOLIDASI & EKOSISTEM KERJA</div>
+            <ul class="card-list">
+              <li>Peningkatan kualitas layanan diklat berstandar industri</li>
+              <li>Perluasan bidang vokasi masa depan (Electric Vehicle, AI)</li>
+              <li>Penguatan sertifikasi instruktur dan SDM internal STP</li>
+              <li>Integrasi serapan kerja pemuda Solo ke industri mitra</li>
+              <li>Penyusunan regulasi kemitraan bisnis dan tarif layanan</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--primary);">
+            <div style="font-size: 12px; font-weight: 800; color: #38bdf8; margin-bottom: 4px;">FASE II (2028–2029)</div>
+            <div class="card-title" style="font-size: 16px;">KOMERSIALISASI & FORMASI SBU</div>
+            <ul class="card-list">
+              <li>Pembentukan Strategic Business Unit (SBU) yang mandiri</li>
+              <li>Kemandirian unit produksi dan jasa rekayasa presisi</li>
+              <li>Strategi corporate marketing terintegrasi nilai etika</li>
+              <li>Peningkatan skala hilirisasi produk UMKM dan startup binaan</li>
+              <li>Peningkatan kontribusi pendapatan operasional BLUD</li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 4px solid var(--accent-amber);">
+            <div style="font-size: 12px; font-weight: 800; color: var(--accent-amber); margin-bottom: 4px;">FASE III (2029–2030)</div>
+            <div class="card-title" style="font-size: 16px;">GLOBAL POSITIONING & HOLDING</div>
+            <ul class="card-list">
+              <li>Reposisi STP sebagai Indonesia Digital Technopark terdepan</li>
+              <li>Penyesuaian tata kelola menuju sistem Holding Company</li>
+              <li>Kemandirian finansial penuh (Self-Financing Technopark)</li>
+              <li>Partisipasi aktif dalam rantai pasok teknologi global</li>
+              <li>Rujukan technopark dan pusat talenta inovasi nasional</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="quote-banner">
+          🎯 Target Puncak 2030: "STP sebagai Centre of Innovation & Industrial Connectivity serta Entrepreneur Technopark yang Mandiri."
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Roadmap kita susun dalam 3 fase bertahap: Dua tahun pertama (2026-2027) kita fokus konsolidasi mutu layanan dan penyerapan tenaga kerja. Masuk fase kedua (2028-2029) kita bentuk Strategic Business Unit (SBU) untuk komersialisasi mandiri. Dan pada 2029-2030, STP telah matang menjadi holding inovasi yang mandiri secara finansial.
+      </div>
+    </section>
+
+    <!-- SLIDE 08: TARGET FINANSIAL BLUD (ENHANCED WITH 3D ASSET) -->
+    <section class="slide" data-slide="8">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Proyeksi Kinerja Anggaran 2026–2030</div>
+          <h2 class="header-title">Re-Setting Target Pendapatan BLUD: Lompatan 3x Lipat</h2>
+        </div>
+        <div class="slide-badge">Pertumbuhan > 212%</div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <!-- Left: 3D Visual Asset with Animated Counter -->
+          <div class="card" style="background-image: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.92)), url('assets/slide_08_financial_growth.jpg'); background-size: cover; background-position: center; justify-content: center; text-align: center; padding: 24px;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--accent-cyan); letter-spacing: 0.1em; text-transform: uppercase;">PROYEKSI PENDAPATAN 2030</div>
+            <div id="counter-display" style="font-size: 38px; font-weight: 800; color: var(--accent-amber); font-family: 'Space Grotesk'; margin: 10px 0;">
+              Rp 23.468.158.831
+            </div>
+            <div style="font-size: 13px; color: var(--accent-green); font-weight: 700; margin-bottom: 8px;">
+              📈 Lonjakan +212,8% dari Baseline 2026
+            </div>
+            <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+              Ditopang kemandirian unit bisnis (SBU), program captive market industri, dan diversifikasi layanan berbayar tanpa ketergantungan APBD.
+            </p>
+          </div>
+
+          <!-- Right: Revenue streams & Quick Table -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="grid-2" style="gap: 10px;">
+              <div class="card" style="padding: 12px; border-left: 3px solid #2563eb;">
+                <div style="font-size: 18px; font-weight: 800; color: #60a5fa; font-family: 'Space Grotesk';">51%</div>
+                <div style="font-size: 11.5px; font-weight: 700; color: #ffffff;">Kerjasama Program</div>
+                <div style="font-size: 10px; color: var(--text-muted);">OGSCI, Kemenperin, BP3MI</div>
+              </div>
+              <div class="card" style="padding: 12px; border-left: 3px solid #0284c7;">
+                <div style="font-size: 18px; font-weight: 800; color: #38bdf8; font-family: 'Space Grotesk';">23%</div>
+                <div style="font-size: 11.5px; font-weight: 700; color: #ffffff;">Diklat & Sertifikasi</div>
+                <div style="font-size: 10px; color: var(--text-muted);">Diklat Mandiri, Las, AI</div>
+              </div>
+            </div>
+
+            <table class="slide-table" style="font-size: 12px;">
+              <thead>
+                <tr>
+                  <th>Tahun</th>
+                  <th>Target Pendapatan</th>
+                  <th>Pertumbuhan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>2026</td><td style="font-weight: 700;">Rp 7.503.392.698</td><td>Baseline</td></tr>
+                <tr><td>2027</td><td style="font-weight: 700;">Rp 12.532.185.031</td><td style="color: var(--accent-green); font-weight: 700;">+67,0%</td></tr>
+                <tr><td>2028</td><td style="font-weight: 700;">Rp 16.100.658.831</td><td style="color: var(--accent-green); font-weight: 700;">+28,5%</td></tr>
+                <tr><td>2029</td><td style="font-weight: 700;">Rp 20.615.658.831</td><td style="color: var(--accent-green); font-weight: 700;">+28,0%</td></tr>
+                <tr style="background: rgba(245, 158, 11, 0.15);">
+                  <td><strong style="color: var(--accent-amber);">2030</strong></td>
+                  <td style="font-weight: 800; color: var(--accent-amber);">Rp 23.468.158.831</td>
+                  <td style="color: var(--accent-green); font-weight: 800;">+13,8%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="quote-banner">
+          📈 "Pertumbuhan pendapatan lebih dari 212% dalam 5 tahun: Menuju kemandirian penuh tanpa beban subsidi APBD."
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Dari sisi fiskal, kami melakukan re-setting target pendapatan yang ambisius namun sangat terukur. Dari baseline Rp 7,5 Miliar di 2026, kita targetkan tembus Rp 23,47 Miliar pada tahun 2030. Porsi terbesar (51%) ditopang oleh kerjasama program industri yang pasarnya sudah captive, seperti OGSCI dan Kemenperin.
+      </div>
+    </section>
+
+    <!-- SLIDE 09: DAMPAK NYATA KOTA SOLO -->
+    <section class="slide" data-slide="9">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Kesejahteraan & Pertumbuhan Ekonomi</div>
+          <h2 class="header-title">Dampak Nyata bagi Masyarakat & Kemajuan Kota Surakarta</h2>
+        </div>
+        <div class="slide-badge">Social & Economic Impact</div>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card" style="border-left: 3px solid var(--accent-cyan);">
+            <div class="card-title">👨‍🏭 SDM & Lapangan Kerja</div>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+              Pemuda Solo mendapatkan keahlian vokasi bersertifikat internasional dan langsung terserap kerja di industri manufaktur, migas, dan IT.
+            </p>
+          </div>
+
+          <div class="card" style="border-left: 3px solid var(--primary);">
+            <div class="card-title">💼 UMKM & Startup Naik Kelas</div>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+              Inkubasi bisnis membuka akses permodalan, standarisasi mutu, sertifikasi HKI, dan onboarding pasar digital ke platform nasional.
+            </p>
+          </div>
+
+          <div class="card" style="border-left: 3px solid var(--accent-green);">
+            <div class="card-title">🔬 Hilirisasi Inovasi Kampus</div>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+              Menjembatani potensi riset dosen & mahasiswa UNS, UMS, dsb. agar menghasilkan produk nyata yang diserap industri dan e-Katalog.
+            </p>
+          </div>
+
+          <div class="card" style="border-left: 3px solid #818cf8;">
+            <div class="card-title">💻 Akses Fasilitas Teknologi</div>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+              Masyarakat, pelajar SMK, dan komunitas dapat memanfaatkan laboratorium canggih (AI, Cyber, 5G, Gaming) secara terbuka.
+            </p>
+          </div>
+
+          <div class="card" style="border-left: 3px solid var(--accent-amber);">
+            <div class="card-title">🏙️ Peningkatan PAD & Investasi</div>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+              Aktivitas industri dan MICE di kawasan memicu perputaran uang di Kota Solo, penerimaan pajak daerah, dan belanja korporasi.
+            </p>
+          </div>
+
+          <div class="card" style="border-left: 3px solid #f43f5e;">
+            <div class="card-title">🌟 Reputasi Kota Inovasi</div>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+              Mengukuhkan citra Surakarta bukan hanya kota pusaka dan budaya, tetapi juga episentrum talenta teknologi terdepan di Jawa Tengah.
+            </p>
+          </div>
+        </div>
+
+        <div class="quote-banner">
+          🎯 Ukuran Keberhasilan STP: Peserta Terserap Kerja • Tenant Tumbuh • Produk Masuk Pasar • Pajak & Retribusi Daerah Meningkat.
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Bapak Walikota, ukuran keberhasilan STP bukan dihitung dari banyaknya piagam atau seremoni, melainkan impact nyata: berapa pemuda Solo yang terserap kerja bergaji layak, berapa UMKM yang naik kelas omzetnya, dan berapa besar kontribusi pajak yang kembali ke kas daerah Surakarta.
+      </div>
+    </section>
+
+    <!-- SLIDE 10: DUKUNGAN WALIKOTA -->
+    <section class="slide" data-slide="10">
+      <div class="slide-header">
+        <div>
+          <div class="header-category">Komitmen Bersama Kepala Daerah</div>
+          <h2 class="header-title">Dukungan Strategis Kebijakan Walikota & Rencana Aksi Konkret</h2>
+        </div>
+        <div class="slide-badge">Call to Action</div>
+      </div>
+      <div class="slide-body">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="card" style="border-left: 4px solid var(--accent-cyan); padding: 16px 20px;">
+            <div style="font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px;">
+              1. Regulasi Prioritas Produk Inovasi (Perwali / Surat Edaran Walikota)
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted);">
+              Mendorong seluruh Organisasi Perangkat Daerah (OPD) dan BUMD Kota Surakarta memprioritaskan penyerapan produk inovasi teknologi binaan STP lewat e-Katalog Lokal.
+            </p>
+          </div>
+
+          <div class="card" style="border-left: 4px solid var(--primary); padding: 16px 20px;">
+            <div style="font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px;">
+              2. Payung Hukum Pemanfaatan Lahan Investasi (KSO / BOT)
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted);">
+              Dukungan regulasi kemitraan aset kawasan untuk menarik investor teknologi skala besar mendirikan Tech-Office, Data Center, dan fasilitas riset komersial.
+            </p>
+          </div>
+
+          <div class="card" style="border-left: 4px solid var(--accent-green); padding: 16px 20px;">
+            <div style="font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px;">
+              3. Mandat Orkestrasi Ekosistem Hexahelix Kota Surakarta
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted);">
+              Arahan Walikota untuk menyatukan agenda riset terapan kampus dan politeknik di Solo Raya agar berpusat dan bermuara hilirisasi di Solo Technopark.
+            </p>
+          </div>
+        </div>
+
+        <div style="background: linear-gradient(90deg, #0284c7, #0f172a); border-radius: 10px; padding: 16px 24px; margin-top: 18px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.4);">
+          <div style="font-size: 15px; font-weight: 800; color: #ffffff;">
+            Bersama Walikota Surakarta, Solo Technopark Siap Menjadi Lokomotif Kemandirian Inovasi Indonesia 🇮🇩
+          </div>
+          <div style="font-size: 12px; color: #bae6fd; margin-top: 4px;">
+            Rencana Aksi 100 Hari: Finalisasi SOP Kemitraan • Kurasi 5 Produk Unggulan • Percepatan Sertifikasi Kerja Vokasi
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-hidden" style="display:none;">
+        Bapak Walikota, visi besar ini membutuhkan kepemimpinan dan dukungan kebijakan dari Bapak: Pertama, regulasi perlindungan agar produk inovasi STP diserap dinas-dinas lewat e-Katalog lokal. Kedua, fleksibilitas kerja sama lahan investasi. Dan ketiga, arahan Bapak untuk menyatukan langkah kampus di Solo agar berhilir di STP. Tim kami siap langsung bergerak. Terima kasih.
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Live Stage Layers -->
+  <canvas id="draw-canvas"></canvas>
+  <div id="laser-pointer"></div>
+  <canvas id="confetti-canvas"></canvas>
+  <div id="timer-pill">⏱️ <span id="timer-display">05:00</span></div>
+
+  <!-- Focus Blur Screen (B) -->
+  <div id="blur-screen" onclick="toggleBlur()">
+    <div style="font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">Fokus Pada Pembicara</div>
+    <div style="font-size: 15px; color: #94a3b8; max-width: 500px;">Slide sengaja disamarkan sejenak agar atensi tertuju penuh pada arahan Bapak Walikota.</div>
+    <div style="margin-top: 24px; font-size: 12px; color: #38bdf8;">Klik di mana saja atau tekan [B] untuk kembali ke slide</div>
+  </div>
+
+  <!-- Bottom Controls -->
+  <div class="control-bar">
+    <div class="controls-left">
+      <button class="btn-nav" id="btn-prev" onclick="changeSlide(-1)">◀ Sebelumnya</button>
+      <button class="btn-nav" id="btn-next" onclick="changeSlide(1)">Berikutnya ▶</button>
+      <span class="page-indicator" id="page-display">Slide 1 / 10</span>
+      <button class="btn-nav" onclick="toggleOverview()">📑 Grid (O)</button>
+    </div>
+
+    <div class="controls-center" style="display: flex; gap: 6px;">
+      <button class="btn-nav" id="btn-laser" onclick="toggleLaser()" title="Laser Pointer (L)">🎯 Laser (L)</button>
+      <button class="btn-nav" id="btn-pen" onclick="togglePen()" title="Live Marker (P)">✏️ Pen (P)</button>
+      <button class="btn-nav" onclick="clearDrawing()" title="Hapus Coretan (C)">🧹 Clear (C)</button>
+      <button class="btn-nav" id="btn-blur" onclick="toggleBlur()" title="Fokuskan Audiens (B)">👁️ Fokus (B)</button>
+      <button class="btn-nav" onclick="fireConfetti()" title="Selebrasi Angka Target">🎉 Rayakan</button>
+      <button class="btn-nav" id="btn-timer" onclick="startTimer(5)" title="Timer 5 Menit">⏱️ 5M</button>
+    </div>
+
+    <div class="controls-right">
+      <button class="btn-nav" id="btn-voice" onclick="toggleSpeech()">🔊 Narasi AI</button>
+      <button class="btn-nav" onclick="toggleNotes()">🎙️ Catatan (S)</button>
+      <button class="btn-nav" onclick="toggleFullScreen()">⛶ Full (F)</button>
+      <button class="btn-nav" onclick="toggleHelp()" title="Daftar Pintasan Keyboard">❓</button>
+    </div>
+  </div>
+
+  <!-- Speaker Notes Drawer -->
+  <div id="notes-drawer">
+    <div class="notes-title">🎙️ CATATAN NARASI PEMBICARA (SPEAKER NOTES)</div>
+    <div class="notes-content" id="notes-text"></div>
+  </div>
+
+  <!-- Slide Overview Grid Modal -->
+  <div id="overview-modal">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">Ringkasan Seluruh Slide (Pilih untuk Melompat)</h3>
+      <button class="btn-nav" onclick="toggleOverview()">✕ Tutup (Esc)</button>
+    </div>
+    <div class="overview-grid" id="overview-container"></div>
+  </div>
+
+  <!-- Keyboard Shortcuts Help Modal -->
+  <div id="help-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 13, 24, 0.92); backdrop-filter: blur(16px); z-index: 200; display: none; justify-content: center; align-items: center;">
+    <div style="background: #0f172a; border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 12px; padding: 28px 36px; max-width: 560px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.8);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #ffffff;">⌨️ Pintasan Keyboard Presenter</h3>
+        <button class="btn-nav" onclick="toggleHelp()">✕ Tutup</button>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+        <div><strong style="color: var(--accent-cyan);">→ / Spasi</strong> : Slide Berikutnya</div>
+        <div><strong style="color: var(--accent-cyan);">←</strong> : Slide Sebelumnya</div>
+        <div><strong style="color: var(--accent-cyan);">L</strong> : Toggle Laser Pointer</div>
+        <div><strong style="color: var(--accent-cyan);">P</strong> : Toggle Live Pen Marker</div>
+        <div><strong style="color: var(--accent-cyan);">C</strong> : Hapus Coretan / Confetti</div>
+        <div><strong style="color: var(--accent-cyan);">B</strong> : Blur Slide (Fokus Audiens)</div>
+        <div><strong style="color: var(--accent-cyan);">O</strong> : Tampilkan Grid Slide</div>
+        <div><strong style="color: var(--accent-cyan);">S</strong> : Catatan Narasi Pembicara</div>
+        <div><strong style="color: var(--accent-cyan);">F</strong> : Layar Penuh (Fullscreen)</div>
+        <div><strong style="color: var(--accent-cyan);">1 - 9</strong> : Set Timer Menit Instan</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 10;
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progress-bar');
+    const pageDisplay = document.getElementById('page-display');
+    const notesDrawer = document.getElementById('notes-drawer');
+    const notesText = document.getElementById('notes-text');
+    const overviewModal = document.getElementById('overview-modal');
+    const overviewContainer = document.getElementById('overview-container');
+    const btnVoice = document.getElementById('btn-voice');
+
+    // Build overview cards
+    slides.forEach((s, idx) => {
+      const card = document.createElement('div');
+      card.className = 'overview-card' + (idx === 0 ? ' current' : '');
+      const hTitle = s.querySelector('.header-title') ? s.querySelector('.header-title').textContent : 'Cover Slide';
+      card.innerHTML = `<div style="font-size: 11px; font-weight: 800; color: var(--accent-cyan);">SLIDE ${idx+1}</div><div style="font-size: 12px; font-weight: 700; color: #ffffff; margin-top: 4px;">${hTitle}</div>`;
+      card.onclick = () => {
+        currentSlide = idx + 1;
+        updateSlide();
+        toggleOverview();
+      };
+      overviewContainer.appendChild(card);
+    });
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        if (idx + 1 === currentSlide) {
+          s.classList.add('active');
+          const noteContent = s.querySelector('.speaker-notes-hidden');
+          notesText.textContent = noteContent ? noteContent.textContent.trim() : 'Tidak ada catatan pembicara.';
+        } else {
+          s.classList.remove('active');
+        }
+      });
+
+      // Update overview cards
+      document.querySelectorAll('.overview-card').forEach((c, idx) => {
+        if (idx + 1 === currentSlide) c.classList.add('current');
+        else c.classList.remove('current');
+      });
+
+      progressBar.style.width = ((currentSlide / totalSlides) * 100) + '%';
+      pageDisplay.textContent = `Slide ${currentSlide} / ${totalSlides}`;
+
+      // Stop speech when slide changes
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      btnVoice.classList.remove('active-btn');
+      btnVoice.innerHTML = '🔊 Putar Narasi Suara AI';
+    }
+
+    function changeSlide(direction) {
+      currentSlide += direction;
+      if (currentSlide < 1) currentSlide = 1;
+      if (currentSlide > totalSlides) currentSlide = totalSlides;
+      updateSlide();
+    }
+
+    function toggleNotes() {
+      notesDrawer.classList.toggle('open');
+    }
+
+    function toggleOverview() {
+      overviewModal.classList.toggle('open');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => alert(err.message));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // AI Text-to-Speech Engine
+    function toggleSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert('Browser Anda belum mendukung Web Speech API.');
+        return;
+      }
+
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        btnVoice.classList.remove('active-btn');
+        btnVoice.innerHTML = '🔊 Putar Narasi Suara AI';
+        return;
+      }
+
+      const activeSlide = document.querySelector('.slide.active');
+      const noteContent = activeSlide ? activeSlide.querySelector('.speaker-notes-hidden') : null;
+      if (!noteContent || !noteContent.textContent.trim()) return;
+
+      const text = noteContent.textContent.trim();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+
+      utterance.onend = () => {
+        btnVoice.classList.remove('active-btn');
+        btnVoice.innerHTML = '🔊 Putar Narasi Suara AI';
+      };
+
+      utterance.onerror = () => {
+        btnVoice.classList.remove('active-btn');
+        btnVoice.innerHTML = '🔊 Putar Narasi Suara AI';
+      };
+
+      btnVoice.classList.add('active-btn');
+      btnVoice.innerHTML = '⏹️ Hentikan Narasi AI';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Modals & Tools Elements
+    const helpModal = document.getElementById('help-modal');
+    const blurScreen = document.getElementById('blur-screen');
+    const laserPointer = document.getElementById('laser-pointer');
+    const drawCanvas = document.getElementById('draw-canvas');
+    const drawCtx = drawCanvas.getContext('2d');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+    const timerPill = document.getElementById('timer-pill');
+    const timerDisplay = document.getElementById('timer-display');
+    const btnLaser = document.getElementById('btn-laser');
+    const btnPen = document.getElementById('btn-pen');
+    const btnBlur = document.getElementById('btn-blur');
+
+    let laserActive = false;
+    let penActive = false;
+    let isDrawing = false;
+    let timerInterval = null;
+    let timerSeconds = 0;
+
+    function resizeStageCanvases() {
+      drawCanvas.width = confettiCanvas.width = window.innerWidth;
+      drawCanvas.height = confettiCanvas.height = window.innerHeight - 56;
+    }
+    window.addEventListener('resize', resizeStageCanvases);
+    resizeStageCanvases();
+
+    // 1. Virtual Laser Pointer
+    function toggleLaser() {
+      laserActive = !laserActive;
+      if (laserActive && penActive) togglePen();
+      laserPointer.style.display = laserActive ? 'block' : 'none';
+      if (btnLaser) btnLaser.classList.toggle('active-btn', laserActive);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      if (laserActive) {
+        laserPointer.style.left = `${e.clientX}px`;
+        laserPointer.style.top = `${e.clientY}px`;
+      }
+    });
+
+    // 2. Live Pen / Drawing Layer
+    function togglePen() {
+      penActive = !penActive;
+      if (penActive && laserActive) toggleLaser();
+      drawCanvas.classList.toggle('drawing-active', penActive);
+      if (btnPen) btnPen.classList.toggle('active-btn', penActive);
+    }
+
+    drawCanvas.addEventListener('mousedown', (e) => {
+      if (!penActive) return;
+      isDrawing = true;
+      drawCtx.beginPath();
+      drawCtx.moveTo(e.clientX, e.clientY);
+      drawCtx.strokeStyle = '#38bdf8';
+      drawCtx.lineWidth = 3.5;
+      drawCtx.lineCap = 'round';
+      drawCtx.shadowBlur = 10;
+      drawCtx.shadowColor = 'rgba(56, 189, 248, 0.8)';
+    });
+
+    drawCanvas.addEventListener('mousemove', (e) => {
+      if (!penActive || !isDrawing) return;
+      drawCtx.lineTo(e.clientX, e.clientY);
+      drawCtx.stroke();
+    });
+
+    drawCanvas.addEventListener('mouseup', () => { isDrawing = false; });
+    drawCanvas.addEventListener('mouseleave', () => { isDrawing = false; });
+
+    function clearDrawing() {
+      drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    }
+
+    // 3. Focus Blur Screen
+    function toggleBlur() {
+      blurScreen.classList.toggle('active');
+      if (btnBlur) btnBlur.classList.toggle('active-btn', blurScreen.classList.contains('active'));
+    }
+
+    // 4. Help Modal
+    function toggleHelp() {
+      helpModal.style.display = helpModal.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // 5. Countdown Timer
+    function startTimer(minutes) {
+      clearInterval(timerInterval);
+      timerSeconds = minutes * 60;
+      timerPill.style.display = 'block';
+      timerPill.classList.remove('warning');
+
+      function updateTimerDisplay() {
+        const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+        const s = (timerSeconds % 60).toString().padStart(2, '0');
+        timerDisplay.textContent = `${m}:${s}`;
+        if (timerSeconds <= 60) timerPill.classList.add('warning');
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.textContent = '00:00 Selesai!';
+          setTimeout(() => { timerPill.style.display = 'none'; }, 4000);
+        }
+        timerSeconds--;
+      }
+      updateTimerDisplay();
+      timerInterval = setInterval(updateTimerDisplay, 1000);
+    }
+
+    // 6. Confetti Particle Burst
+    let confettiPieces = [];
+    function fireConfetti() {
+      confettiPieces = [];
+      const colors = ['#38bdf8', '#f59e0b', '#10b981', '#ec4899', '#ffffff'];
+      for (let i = 0; i < 90; i++) {
+        confettiPieces.push({
+          x: confettiCanvas.width / 2 + (Math.random() - 0.5) * 200,
+          y: confettiCanvas.height / 2,
+          vx: (Math.random() - 0.5) * 12,
+          vy: Math.random() * -10 - 4,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+      animateConfetti();
+    }
+
+    let confettiAnimId = null;
+    function animateConfetti() {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      let alive = false;
+      confettiPieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.25; // gravity
+        p.rotation += p.rotSpeed;
+        p.opacity -= 0.008;
+
+        if (p.opacity > 0) {
+          alive = true;
+          confettiCtx.save();
+          confettiCtx.translate(p.x, p.y);
+          confettiCtx.rotate((p.rotation * Math.PI) / 180);
+          confettiCtx.globalAlpha = Math.max(0, p.opacity);
+          confettiCtx.fillStyle = p.color;
+          confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          confettiCtx.restore();
+        }
+      });
+
+      if (alive) {
+        confettiAnimId = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (overviewModal.classList.contains('open')) {
+        if (e.key === 'Escape' || e.key.toLowerCase() === 'o') toggleOverview();
+        return;
+      }
+      if (helpModal.style.display === 'flex') {
+        if (e.key === 'Escape' || e.key === '?') toggleHelp();
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        changeSlide(-1);
+      } else if (e.key === 'Home') {
+        currentSlide = 1;
+        updateSlide();
+      } else if (e.key === 'End') {
+        currentSlide = totalSlides;
+        updateSlide();
+      } else if (key === 'l') {
+        toggleLaser();
+      } else if (key === 'p') {
+        togglePen();
+      } else if (key === 'c') {
+        clearDrawing();
+        fireConfetti();
+      } else if (key === 'b') {
+        toggleBlur();
+      } else if (key === 's') {
+        toggleNotes();
+      } else if (key === 'f') {
+        toggleFullScreen();
+      } else if (key === 'o') {
+        toggleOverview();
+      } else if (key === '?' || key === 'h') {
+        toggleHelp();
+      } else if (e.key >= '1' && e.key <= '9') {
+        startTimer(parseInt(e.key, 10));
+      }
+    });
+
+    // Interactive Particle Network Background
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.5)';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 45; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 130) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 * (1 - dist / 130)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    updateSlide();
+  </script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ringkasan Eksekutif Roadmap Solo Technopark 2026–2030 | Walikota Surakarta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm 12mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #0f172a;
+      background-color: #f8fafc;
+      line-height: 1.35;
+      font-size: 11.5px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page-container {
+      max-width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 12mm 14mm;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    @media print {
+      body { background: #ffffff; }
+      .page-container {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        min-height: auto;
+      }
+      .no-print { display: none !important; }
+    }
+    .header {
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .header-left h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0369a1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .header-left h2 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 2px;
+    }
+    .badge-confidential {
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      border: 1px solid #bae6fd;
+    }
+    .vision-box {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      padding: 9px 14px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    .vision-box strong {
+      color: #fef08a;
+    }
+    .section-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #0369a1;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 3px;
+    }
+    .table-kpi {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-size: 10.5px;
+    }
+    .table-kpi th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 5px 8px;
+      font-weight: 700;
+      text-align: left;
+    }
+    .table-kpi td {
+      padding: 4.5px 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .table-kpi tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .table-kpi .highlight {
+      font-weight: 800;
+      color: #0284c7;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .pillar-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-top: 3px solid #0284c7;
+      border-radius: 5px;
+      padding: 7px 9px;
+    }
+    .pillar-card h4 {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 3px;
+    }
+    .pillar-card p {
+      font-size: 9.8px;
+      color: #475569;
+      line-height: 1.3;
+    }
+    .asks-container {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+    .asks-list {
+      list-style-type: none;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .ask-item {
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      border-radius: 4px;
+      padding: 6px 8px;
+    }
+    .ask-item h5 {
+      font-size: 10px;
+      font-weight: 800;
+      color: #1e40af;
+      margin-bottom: 2px;
+    }
+    .ask-item p {
+      font-size: 9.5px;
+      color: #334155;
+      line-height: 1.25;
+    }
+    .timeline-strip {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .timeline-card {
+      flex: 1;
+      background: #f1f5f9;
+      border-left: 3px solid #10b981;
+      padding: 5px 8px;
+      border-radius: 3px;
+    }
+    .timeline-card .day {
+      font-weight: 800;
+      font-size: 9.5px;
+      color: #047857;
+    }
+    .timeline-card .desc {
+      font-size: 9.2px;
+      color: #334155;
+    }
+    .footer {
+      border-top: 1px solid #cbd5e1;
+      padding-top: 5px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #64748b;
+    }
+    .btn-print {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      font-family: inherit;
+    }
+    .btn-print:hover { background: #0369a1; }
+  </style>
+</head>
+<body>
+
+  <button class="btn-print no-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+
+  <div class="page-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <h1>Bahan Pengambilan Keputusan Walikota Surakarta</h1>
+        <h2>Ringkasan Eksekutif Roadmap Solo Technopark (STP) 2026–2030</h2>
+      </div>
+      <div class="badge-confidential">
+        LEMBAR MEJA PIMPINAN • 1 HALAMAN
+      </div>
+    </div>
+
+    <!-- Vision Box -->
+    <div class="vision-box">
+      <strong>Visi Strategis:</strong> Menjadikan Solo Technopark sebagai <strong>lokomotif kemandirian ekonomi baru Kota Surakarta</strong> melalui hilirisasi riset industri terapan, kemandirian penuh keuangan BLUD (0% subsidi APBD), dan penyerapan tenaga kerja warga Solo.
+    </div>
+
+    <!-- Section 1: KPI Table -->
+    <div>
+      <div class="section-title">📊 1. Lompatan Kinerja & Dampak Riil bagi Kota Surakarta (2026 ➔ 2030)</div>
+      <table class="table-kpi">
+        <thead>
+          <tr>
+            <th>Indikator Sasaran Strategis</th>
+            <th>Baseline 2026</th>
+            <th>Target 2028</th>
+            <th>Target 2030</th>
+            <th>Manfaat Konkret bagi Kota Surakarta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pendapatan BLUD (Mandiri)</strong></td>
+            <td>Rp 7,5 Miliar</td>
+            <td>Rp 14,2 Miliar</td>
+            <td class="highlight">Rp 23,4 Miliar</td>
+            <td><strong>Kemandirian finansial penuh; 0% beban belanja operasional APBD.</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Serapan Tenaga Kerja Baru</strong></td>
+            <td>3.500 org/th</td>
+            <td>5.800 org/th</td>
+            <td class="highlight">9.000 org/th</td>
+            <td>Afirmasi KTP Surakarta (kuota min. 65%), menurunkan pengangguran muda.</td>
+          </tr>
+          <tr>
+            <td><strong>Startup / Tenant Mandiri</strong></td>
+            <td>12 unit</td>
+            <td>35 unit</td>
+            <td class="highlight">80 unit</td>
+            <td>Peningkatan setoran PAD & perputaran ekosistem ekonomi kreatif.</td>
+          </tr>
+          <tr>
+            <td><strong>Produk Riset Berhilir Pasar</strong></td>
+            <td>4 produk</td>
+            <td>15 produk</td>
+            <td class="highlight">45 produk</td>
+            <td>Solusi teknologi kota: Smart City, IoT Pertanian, dan Alat Kesehatan terjangkau.</td>
+          </tr>
+          <tr>
+            <td><strong>Total Investasi Mitra Global</strong></td>
+            <td>Rp 30 Miliar</td>
+            <td>Rp 75 Miliar</td>
+            <td class="highlight">Rp 180 Miliar</td>
+            <td>Modernisasi sarana teknologi mutakhir tanpa belanja modal daerah.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 2: Three Engine Pillars -->
+    <div>
+      <div class="section-title">🚀 2. Tiga Pilar Mesin Penggerak (The 3-Tier Engine)</div>
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <h4>1. Hilirisasi Quadruple Helix</h4>
+          <p>Mengintegrasikan riset kampus (UNS, UMS, ISI) dengan kebutuhan industri. STP dan BRIDA merekayasa inovasi langsung berstandar komersial.</p>
+        </div>
+        <div class="pillar-card">
+          <h4>2. Diversifikasi BLUD</h4>
+          <p>Menghapus ketergantungan sewa lahan. Mengembangkan lab uji teknologi, sertifikasi internasional, dan bagi hasil hak royalti paten.</p>
+        </div>
+        <div class="pillar-card">
+          <h4>3. Sertifikasi & e-Katalog</h4>
+          <p>Mendampingi tenant memperoleh sertifikasi TKDN dan SNI agar siap dibeli oleh dinas pemerintah dan pasar korporasi nasional.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Leadership Asks to Walikota -->
+    <div>
+      <div class="section-title">🏛️ 3. Tiga Permohonan Kebijakan kepada Walikota Surakarta</div>
+      <div class="asks-container">
+        <div style="font-size: 9.8px; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">
+          STP tidak meminta tambahan pagu belanja anggaran daerah, melainkan memohon 3 payung kepemimpinan kebijakan:
+        </div>
+        <div class="asks-list">
+          <div class="ask-item">
+            <h5>1. Instruksi Afirmasi e-Katalog</h5>
+            <p>Mengarahkan seluruh dinas/OPD Pemkot memprioritaskan belanja produk inovasi tenant STP lewat e-Katalog Lokal.</p>
+          </div>
+          <div class="ask-item">
+            <h5>2. Regulasi Kemitraan Aset BLUD</h5>
+            <p>Memberi fleksibilitas kerja sama pemanfaatan lahan dan skema <em>revenue sharing</em> jangka panjang bagi investor teknologi.</p>
+          </div>
+          <div class="ask-item">
+            <h5>3. Mandat Konsorsium Riset</h5>
+            <p>Menerbitkan edaran agar dana riset kampus di Solo difokuskan menyelesaikan masalah riil kota melalui fasilitas STP.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: 100-Day Quick Wins -->
+    <div>
+      <div class="section-title">⚡ 4. Rencana Aksi 100 Hari Pertama (Quick Wins Pasca-Arahan Walikota)</div>
+      <div class="timeline-strip">
+        <div class="timeline-card">
+          <div class="day">Hari 1–30</div>
+          <div class="desc">Harmonisasi draft Perwali/Instruksi Walikota untuk e-Katalog Lokal inovasi STP.</div>
+        </div>
+        <div class="timeline-card">
+          <div class="day">Hari 31–60</div>
+          <div class="desc">Showcase 5 produk hilirisasi unggulan (IoT Pertanian & Alkes) di hadapan Walikota & OPD.</div>
+        </div>
+        <div class="timeline-card">
+          <div class="day">Hari 61–100</div>
+          <div class="desc">Penandatanganan Konsorsium 5 Perguruan Tinggi Solo Raya bersama Kadin di Solo Technopark.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>Dokumen Resmi Manajemen Solo Technopark bersama BRIDA Kota Surakarta</div>
+      <div>Solo Technopark • Kawasan Sains & Teknologi Kebanggaan Warga Surakarta</div>
+    </div>
+  </div>
+
+</body>
+</html>
