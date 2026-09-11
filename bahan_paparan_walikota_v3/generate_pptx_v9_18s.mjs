@@ -98,27 +98,27 @@ pptx.title = 'Roadmap Transformasi Solo Technopark 2026-2030 (Swiss Enterprise U
 function addHeader(slide, { kicker, title, subtitle, pageNum }) {
   // Kicker
   slide.addText(kicker.toUpperCase(), {
-    x: 0.8, y: 0.42, w: 10.0, h: 0.24,
+    x: 0.8, y: 0.36, w: 10.0, h: 0.22,
     fontFace: C.fontTitle, fontSize: 8.5, bold: true, color: C.blue,
     charSpacing: 1.5
   });
   
   // Title
   slide.addText(title, {
-    x: 0.8, y: 0.65, w: 10.5, h: 0.48,
-    fontFace: C.fontTitle, fontSize: 19, bold: true, color: C.textMain
+    x: 0.8, y: 0.62, w: 10.5, h: 0.44,
+    fontFace: C.fontTitle, fontSize: 18.5, bold: true, color: C.textMain
   });
   
   // Subtitle
   slide.addText(subtitle, {
-    x: 0.8, y: 1.12, w: 10.5, h: 0.28,
-    fontFace: C.fontBody, fontSize: 10.5, italic: true, color: C.textDim
+    x: 0.8, y: 1.10, w: 10.5, h: 0.26,
+    fontFace: C.fontBody, fontSize: 10, italic: true, color: C.textDim
   });
   
   // Page Counter (18 Total)
   if (pageNum) {
     slide.addText(`${pageNum.toString().padStart(2, '0')}  /  18`, {
-      x: 11.5, y: 0.48, w: 1.0, h: 0.25,
+      x: 11.5, y: 0.36, w: 1.0, h: 0.22,
       fontFace: C.fontTitle, fontSize: 9.5, bold: true, color: C.textDim, align: 'right'
     });
   }
@@ -529,15 +529,15 @@ console.log('Building 18-Slide Polished Executive Master Deck...');
   
   // Left: Hierarchy of Regulation
   s.addShape(pptx.shapes.RECTANGLE, {
-    x: 0.8, y: 1.65, w: 4.4, h: 4.4,
+    x: 0.8, y: 1.65, w: 4.5, h: 4.4,
     fill: { color: C.bgSoft }, line: { color: C.border, width: 1 }
   });
   s.addShape(pptx.shapes.RECTANGLE, {
-    x: 0.8, y: 1.65, w: 4.4, h: 0.08,
+    x: 0.8, y: 1.65, w: 4.5, h: 0.08,
     fill: { color: C.navy }, line: { color: C.navy }
   });
   s.addText('HIRARKI REGULASI PENGUAT BLUD', {
-    x: 1.05, y: 1.85, w: 3.9, h: 0.25,
+    x: 1.05, y: 1.85, w: 4.0, h: 0.25,
     fontFace: C.fontTitle, fontSize: 10, bold: true, color: C.navy, charSpacing: 1
   });
   
@@ -552,16 +552,16 @@ console.log('Building 18-Slide Polished Executive Master Deck...');
     const ry = 2.22 + (i * 0.92);
     addSvgIcon(s, { iconName: 'fileText', x: 1.05, y: ry + 0.04, size: 0.28, color: C.blue, bgColor: C.bgTintBlue });
     s.addText(r.title, {
-      x: 1.5, y: ry, w: 3.5, h: 0.25,
+      x: 1.5, y: ry, w: 3.6, h: 0.25,
       fontFace: C.fontTitle, fontSize: 10.5, bold: true, color: C.textMain
     });
     s.addText(r.sub, {
-      x: 1.5, y: ry + 0.26, w: 3.5, h: 0.60,
+      x: 1.5, y: ry + 0.26, w: 3.6, h: 0.60,
       fontFace: C.fontBody, fontSize: 9.5, color: C.textMuted, lineSpacingMultiple: 1.15
     });
   });
   
-  // Right: 4 Structured Flexibility Cards
+  // Right: 4 Structured Flexibility Cards (Balanced to exact 0.8" right margin)
   const flexs = [
     {
       title: 'FLEKSIBILITAS TARIF LAYANAN',
@@ -596,7 +596,7 @@ console.log('Building 18-Slide Polished Executive Master Deck...');
   flexs.forEach((f, i) => {
     const col = i % 2;
     const row = Math.floor(i / 2);
-    const fx = 5.45 + (col * 3.55);
+    const fx = 5.533 + (col * 3.60);
     const fy = 1.65 + (row * 2.25);
     
     s.addShape(pptx.shapes.RECTANGLE, {
@@ -1943,49 +1943,49 @@ console.log('Building 18-Slide Polished Executive Master Deck...');
   
   const dims = [
     {
-      title: '1. DAMPAK EKONOMI DAERAH',
+      title: '1. DAMPAK EKONOMI',
       metric: 'Rp 18,5 Miliar',
-      tag: '+300% MULTIPLIER EFFECT',
+      tag: '+300% MULTIPLIER',
       sub: 'Omzet Komulatif Tenant Inovasi 2030',
       color: C.navy, bg: C.bgTintBlue, icon: 'trendingUp',
       desc: 'Menciptakan perputaran ekonomi baru di Surakarta melalui komersialisasi produk inovasi teknologi dan pembentukan startup lokal.'
     },
     {
-      title: '2. SERAPAN TENAGA KERJA',
-      metric: '1.500 Talenta / Thn',
-      tag: '85%+ LULUSAN TERSERAP',
+      title: '2. SERAPAN KERJA',
+      metric: '1.500 Talenta / Tahun',
+      tag: '85%+ LULUS TERSERAP',
       sub: 'Terserap Industri dengan Upah Layak',
       color: C.blue, bg: C.bgTintBlue, icon: 'users',
       desc: '85%+ lulusan diklat vokasi STP langsung terserap di industri teknologi nasional dan manufaktur presisi, menekan angka pengangguran terbuka.'
     },
     {
-      title: '3. FISKAL & PAD DAERAH',
-      metric: 'Rp 10,2 Miliar / Thn',
-      tag: 'NOL SUBSIDI APBD 2029',
+      title: '3. FISKAL & PAD',
+      metric: 'Rp 10,2 Miliar / Tahun',
+      tag: 'NOL SUBSIDI 2029',
       sub: 'Efisiensi Belanja APBD Pasca-BEP',
       color: C.emerald, bg: C.bgTintGreen, icon: 'dollarSign',
       desc: 'APBD tidak lagi terbebani subsidi operasional STP; kas daerah justru menerima kontribusi PAD melalui pajak dan retribusi kegiatan komersial.'
     },
     {
-      title: '4. EKOSISTEM INOVASI & HKI',
-      metric: '50+ Paten & Cipta',
-      tag: 'RUJUKAN INOVASI JATENG',
+      title: '4. EKOSISTEM HKI',
+      metric: '50+ Paten & Hak Cipta',
+      tag: 'RUJUKAN INOVASI',
       sub: 'Didaftarkan & Dilisensikan ke Industri',
       color: C.amber, bg: C.bgTintAmber, icon: 'award',
       desc: 'Solo menjadi rujukan pendaftaran dan komersialisasi kekayaan intelektual (HKI) perguruan tinggi dan inovator lokal di Jawa Tengah.'
     },
     {
-      title: '5. BRANDING KOTA INOVATIF',
+      title: '5. BRANDING KOTA',
       metric: 'Top-3 KST Nasional',
-      tag: 'STANDAR INTERNASIONAL',
+      tag: 'STANDAR GLOBAL',
       sub: 'Rujukan Nasional & Internasional',
       color: C.purple, bg: C.bgTintPurple, icon: 'globe',
       desc: 'Meningkatkan citra Kota Surakarta dari kota budaya-heritage menjadi kota modern yang memadukan budaya luhur dengan inovasi teknologi masa depan.'
     },
     {
-      title: '6. INKLUSI & EDUKASI WARGA',
-      metric: '25.000 Pelajar / Thn',
-      tag: 'AKSES LITERASI GRATIS',
+      title: '6. INKLUSI WARGA',
+      metric: '25.000 Pelajar / Tahun',
+      tag: 'LITERASI GRATIS',
       sub: 'Penerima Manfaat Edukasi Sains',
       color: C.red, bg: C.bgTintRed, icon: 'sparkles',
       desc: 'Membuka akses gratis literasi digital, kunjungan laboratorium sains, dan pelatihan coding dasar bagi anak-anak keluarga kurang mampu di Surakarta.'
@@ -2007,41 +2007,45 @@ console.log('Building 18-Slide Polished Executive Master Deck...');
       fill: { color: d.color }, line: { color: d.color }
     });
     
-    addSvgIcon(s, { iconName: d.icon, x: dx + 0.2, y: dy + 0.16, size: 0.32, color: d.color, bgColor: d.bg });
+    // Top Row: Icon + Short Title + Top-Right Tag Pill (Zero Collision!)
+    addSvgIcon(s, { iconName: d.icon, x: dx + 0.2, y: dy + 0.16, size: 0.30, color: d.color, bgColor: d.bg });
     
     s.addText(d.title, {
-      x: dx + 0.65, y: dy + 0.16, w: 2.9, h: 0.25,
-      fontFace: C.fontTitle, fontSize: 10, bold: true, color: C.textMain
+      x: dx + 0.60, y: dy + 0.16, w: 1.70, h: 0.24,
+      fontFace: C.fontTitle, fontSize: 9.5, bold: true, color: C.textMain
     });
     
-    s.addText(d.metric, {
-      x: dx + 0.2, y: dy + 0.55, w: 2.2, h: 0.38,
-      fontFace: C.fontTitle, fontSize: 17, bold: true, color: d.color
-    });
-    
-    // Tag pill beside metric
     s.addShape(pptx.shapes.RECTANGLE, {
-      x: dx + 2.35, y: dy + 0.60, w: 1.25, h: 0.24,
+      x: dx + 2.36, y: dy + 0.16, w: 1.22, h: 0.24,
       fill: { color: d.bg }, line: { color: d.color, width: 0.75 }
     });
     s.addText(d.tag, {
-      x: dx + 2.35, y: dy + 0.62, w: 1.25, h: 0.20,
-      fontFace: C.fontTitle, fontSize: 7, bold: true, color: d.color, align: 'center'
+      x: dx + 2.36, y: dy + 0.18, w: 1.22, h: 0.20,
+      fontFace: C.fontTitle, fontSize: 7.5, bold: true, color: d.color, align: 'center'
     });
     
+    // Metric Row: Full Width 3.38" - sits 100% on ONE single line without wrapping
+    s.addText(d.metric, {
+      x: dx + 0.2, y: dy + 0.52, w: 3.38, h: 0.36,
+      fontFace: C.fontTitle, fontSize: 16.5, bold: true, color: d.color
+    });
+    
+    // Subtitle Row
     s.addText(d.sub, {
-      x: dx + 0.2, y: dy + 0.95, w: 3.38, h: 0.22,
+      x: dx + 0.2, y: dy + 0.90, w: 3.38, h: 0.22,
       fontFace: C.fontTitle, fontSize: 8.5, bold: true, color: C.textDim
     });
     
+    // Hairline Divider
     s.addShape(pptx.shapes.LINE, {
-      x: dx + 0.2, y: dy + 1.22, w: 3.38, h: 0,
+      x: dx + 0.2, y: dy + 1.16, w: 3.38, h: 0,
       line: { color: C.border, width: 1 }
     });
     
+    // Description Paragraph
     s.addText(d.desc, {
-      x: dx + 0.2, y: dy + 1.30, w: 3.38, h: 0.75,
-      fontFace: C.fontBody, fontSize: 10, color: C.textMuted, lineSpacingMultiple: 1.20
+      x: dx + 0.2, y: dy + 1.24, w: 3.38, h: 0.78,
+      fontFace: C.fontBody, fontSize: 9.5, color: C.textMuted, lineSpacingMultiple: 1.18
     });
   });
   
