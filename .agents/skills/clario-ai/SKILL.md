@@ -31,3 +31,16 @@ curl.exe -s -X POST https://clario.apicloud.my.id/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"clario/glm-5.3-flash","messages":[{"role":"user","content":"halo"}]}'
 ```
+
+## 5. Protokol Polesan AI Slide Eksekutif (Zero Content Loss Invariant)
+Gunakan protokol ini setiap kali memoles presentasi menggunakan Clario AI atau Canva:
+
+1. **Invarian Retensi Konten Mutlak (*Zero Content Loss*)**:
+   - Dilarang memotong, mereduksi, atau mengubah data substantif (angka finansial, target BEP, 95 mitra, 5 produk TRL, 5 GAP, 3 dukungan kebijakan, dan seluruh periode matriks aksi 100 hari).
+   - Code generator (PptxGenJS) tetap berfungsi sebagai **Jangkar Utama (Single Source of Truth)** untuk posisi layout, teks, dan tabel.
+
+2. **Arsitektur Hibrida 3 Lapis (*The 3-Tier AI Polish*)**:
+   - **Lapisan 1 (Code Engine)**: Menjamin tata letak piksel, batas aman margin, dan integritas data 100%.
+   - **Lapisan 2 (Clario Cloud LLM)**: Menajamkan diksi narasi eksekutif (*tone* kepala daerah) dan memproduksi *visual prompt* terarah per slide.
+   - **Lapisan 3 (Canva MCP & Image Gen)**: Menghasilkan visual pendukung (backdrop, render 3D produk riset, aset grafis korporat) untuk diinjeksikan ke dalam slide.
+
